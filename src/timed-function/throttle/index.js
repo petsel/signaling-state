@@ -7,6 +7,16 @@ import {
 const DEFAULT_THROTTLE_THRESHOLD = 200;
 
 /**
+ * @module timed-function
+ * @typicalname Timed Function
+ */
+
+// /* *
+//  * @module debounce
+//  * @typicalname Throttled Function
+//  * /
+
+/**
  * Returns a function, that, as long as being invoked continuously, will trigger
  * just once after a certain parametrized millisecond amount of `threshold` time.
  * It also triggers immediately for its first time being invoked.
@@ -96,10 +106,6 @@ Object.defineProperty(Function.prototype, 'throttle', {
 
 // provide static implementations as well.
 
-/**
- * @module Function.timed.throttle
- * @typicalname Throttle - Timed Function
- */
 export default function staticThrottle(
   proceed,
   threshold,

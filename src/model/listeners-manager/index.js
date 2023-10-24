@@ -1,7 +1,12 @@
 /**
- * @module ListenersManager
- * @typicalname Listeners Manager
+ * @module model
+ * @typicalname Signaling State Model
  */
+
+// /* *
+//  * @module ListenersManager
+//  * @typicalname Listeners Manager
+//  * /
 
 function registerListener(listeners, keypath, eventType, eventHandler) {
   if (!listeners.has(keypath)) {

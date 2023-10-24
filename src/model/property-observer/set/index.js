@@ -9,9 +9,14 @@ import {
 import { createObservableSignalingStateModel } from '../../../index';
 
 /**
- * @module setPropertyObserver
- * @typicalname Set Property Observer
+ * @module model
+ * @typicalname Signaling State Model
  */
+
+// /* *
+//  * @module setPropertyObserver
+//  * @typicalname Set Property Observer
+//  * /
 
 export default function setPropertyObserver(target, key, value, proxy) {
   let success = false;

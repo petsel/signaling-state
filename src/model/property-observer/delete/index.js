@@ -1,9 +1,14 @@
 import { isProtectedDataNodeKey } from '../../../utility';
 
 /**
- * @module deletePropertyObserver
- * @typicalname Delete Property Observer
+ * @module model
+ * @typicalname Signaling State Model
  */
+
+// /* *
+//  * @module deletePropertyObserver
+//  * @typicalname Delete Property Observer
+//  * /
 
 export default function deletePropertyObserver(target, key) {
   // eslint-disable-next-line no-debugger

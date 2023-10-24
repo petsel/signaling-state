@@ -1,9 +1,14 @@
 import staticDebounce from '../../timed-function/debounce';
 
 /**
- * @module ChangeDispatcher
- * @typicalname Change Dispatcher
+ * @module model
+ * @typicalname Signaling State Model
  */
+
+// /* *
+//  * @module ChangeDispatcher
+//  * @typicalname Change Dispatcher
+//  * /
 
 function handleStateChangeThroughBoundDispatcher() {
   const patchLog = structuredClone(this.patchLog);

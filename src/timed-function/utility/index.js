@@ -1,7 +1,8 @@
 /**
- * @module Function.timed.utility
- * @typicalname Utility Helpers - Timed Function
+ * @module timed-function-utility
+ * @typicalname Timed Function Utility
  */
+
 export function isFunction(value) {
   return (
     typeof value === 'function' &&

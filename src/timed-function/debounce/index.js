@@ -7,6 +7,16 @@ import {
 const DEFAULT_DEBOUNCE_DELAY = 100;
 
 /**
+ * @module timed-function
+ * @typicalname Timed Function
+ */
+
+// /* *
+//  * @module debounce
+//  * @typicalname Debounced Function
+//  * /
+
+/**
  * Returns a function, that does not trigger, as long as being invoked continuously.
  * It does trigger immediately after not having been called for a `delay` of a
  * parametrized amount of milliseconds.
@@ -97,10 +107,6 @@ Object.defineProperty(Function.prototype, 'debounce', {
 
 // provide static implementations as well.
 
-/**
- * @module Function.timed.debounce
- * @typicalname Debounce - Timed Function
- */
 export default function staticDebounce(
   proceed,
   delay,

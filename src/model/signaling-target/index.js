@@ -5,9 +5,14 @@ import ChangeDispatcher from '../change-dispatcher';
 import ListenersManager from '../listeners-manager';
 
 /**
- * @module SignalingTarget
- * @typicalname Signaling Target
+ * @module model
+ * @typicalname Signaling State Model
  */
+
+// /* *
+//  * @module SignalingTarget
+//  * @typicalname Signaling Target
+//  * /
 
 function getDataRaw(target) {
   // - some values like e.g. a deeply proxied state can not
