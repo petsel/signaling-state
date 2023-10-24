@@ -1,0 +1,54 @@
+{
+  "name": "signaling-state",
+  "version": "1.0.0",
+  "keywords": [
+    "ECMAScript", "Signaling State Model", "deep observable",
+    "state model", "signaling data nodes", "observable state",
+    "state"
+  ],
+  "description": "proxy-based, deep observable state-model of signaling data-nodes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/petsel/signaling-state/issues"
+  },
+  "homepage": "https://github.com/petsel/signaling-state/tree/main#readme",
+  "author": "Peter Seliger",
+  "sideEffects": false,
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "format": "prettier --write src/ test/",
+    "lint": "npm run format && eslint src/ test/",
+    "test": "LOG_LEVEL=debug jest --verbose",
+    "test:coverage": "jest --coverage",
+    "docs:default": "cd ./docs && rm -rf jsdoc-default && cd .. && jsdoc --configure ./jsdoc.config.json --verbose",
+    "docs:docdash": "cd ./docs && rm -rf jsdoc-docdash && cd .. && jsdoc --configure ./jsdoc.config.docdash.json --verbose",
+    "docs": "npm run docs:default && npm run docs:docdash",
+    "qa": "npm run lint && npm run test:coverage && npm run docs",
+    "build:dev": "npm run test && webpack --mode=development",
+    "build": "npm run qa && webpack --mode=production",
+    "publish": "npm publish"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.21.3",
+    "@babel/eslint-parser": "^7.21.3",
+    "@babel/preset-env": "^7.20.2",
+    "@jest/globals": "^29.5.0",
+    "babel-jest": "^29.5.0",
+    "babel-loader": "^9.1.2",
+    "docdash": "^2.0.1",
+    "eslint": "^8.36.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jest": "^27.2.1",
+    "jest": "^29.5.0",
+    "jest-cli": "^29.5.0",
+    "jsdoc": "^4.0.2",
+    "prettier": "^2.8.6",
+    "prettier-eslint": "^15.0.1",
+    "webpack": "^5.76.2",
+    "webpack-cli": "^5.0.1"
+  }
+}

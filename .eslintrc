@@ -1,0 +1,27 @@
+{
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "allowImportExportEverywhere": true,
+    "babelOptions": {
+      "configFile": "./.babelrc"
+    }
+  },
+  "extends": ["airbnb-base", "prettier"],
+  "plugins": ["jest"],
+  "env": {
+    "jest/globals": true,
+    "es2021": true,
+    "node": true
+  },
+  "rules": {
+    "import/prefer-default-export": "off",
+    "no-param-reassign": "off",
+    "no-return-assign": "off",
+    "one-var": "off",
+    "prefer-object-spread": "warn",
+    "lines-between-class-members": "off",
+    "no-multiple-empty-lines": ["error", { "max": 2 }],
+    "yoda": ["error", "never", { "onlyEquality": true }]
+  }
+}
