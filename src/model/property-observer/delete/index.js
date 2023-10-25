@@ -11,8 +11,8 @@ import { isProtectedDataNodeKey } from '../../../utility';
 //  * /
 
 export default function deletePropertyObserver(target, key) {
-  // eslint-disable-next-line no-debugger
-  debugger;
+  // let success = false;
+
   console.log({ delete: { target, key } });
 
   return isProtectedDataNodeKey(key)

@@ -28,6 +28,20 @@ describe('regarding the features of any observable state ...', () => {
 
     state.la.ne = { foo: 'FOO' };
     expect(state.la.ne.getDataRaw()).toStrictEqual({ foo: 'FOO' });
+
+    // touch case
+    state.la = { lau: 'LAU', ne: { foo: 'FOO' } };
+    expect(state.la.getDataRaw()).toStrictEqual({
+      lau: 'LAU',
+      ne: { foo: 'FOO' },
+    });
+
+    // touch case
+    state.la = { lau: 'LAU', ne: { foo: 'FOO' } };
+    expect(state.la.getDataRaw()).toStrictEqual({
+      lau: 'LAU',
+      ne: { foo: 'FOO' },
+    });
   });
 
   test.skip('... one can successfully delete an existing property ...', () => {

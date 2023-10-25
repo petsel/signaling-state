@@ -1,7 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import { isObject } from '../../utility';
 
-import ChangeDispatcher from '../change-dispatcher';
+import StateDispatcher from '../state-dispatcher';
 import ListenersManager from '../listeners-manager';
 
 /**
@@ -27,7 +27,7 @@ function asSignalingTarget(
   keypath,
   rootState,
   parentState,
-  changeDispatcher,
+  stateDispatcher,
   listenersManager,
 ) {
   function dispatchEvent(...args) {
@@ -44,7 +44,7 @@ function asSignalingTarget(
   }
   const eventTarget = new EventTarget();
 
-  changeDispatcher = changeDispatcher ?? new ChangeDispatcher(this);
+  stateDispatcher = stateDispatcher ?? new StateDispatcher(this);
   listenersManager = listenersManager ?? new ListenersManager(this);
 
   Object.defineProperties(this, {
@@ -56,7 +56,7 @@ function asSignalingTarget(
 
     getChildStates: { get: () => () => getChildStates(this) },
 
-    getChangeDispatcher: { get: () => () => changeDispatcher },
+    getStateDispatcher: { get: () => () => stateDispatcher },
     getListenersManager: { get: () => () => listenersManager },
 
     dispatchEvent: { get: () => dispatchEvent },
@@ -64,7 +64,7 @@ function asSignalingTarget(
     removeEventListener: { get: () => removeEventListener },
   });
 }
-export class SignalingTargetObject {
+export class SignalingObject {
   constructor(...args) {
     asSignalingTarget.apply(this, args);
   } /*
@@ -72,7 +72,7 @@ export class SignalingTargetObject {
     return Object;
   } */
 }
-export class SignalingTargetArray extends Array {
+export class SignalingArray extends Array {
   constructor(...args) {
     super();
     asSignalingTarget.apply(this, args);

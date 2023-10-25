@@ -83,10 +83,7 @@
  *
  */
 import { isDataObject } from './utility';
-import {
-  SignalingTargetObject,
-  SignalingTargetArray,
-} from './model/signaling-target';
+import { SignalingObject, SignalingArray } from './model/signaling-target';
 
 // eslint-disable-next-line import/no-cycle
 import setPropertyObserver from './model/property-observer/set';
@@ -106,17 +103,16 @@ export function createObservableSignalingStateModel(
   keypath = '',
   rootState = null,
   parentState = null,
-  changeDispatcher = null,
+  stateDispatcher = null,
   listenersManager = null,
 ) {
-  const SignalingTarget =
-    (isArray(data) && SignalingTargetArray) || SignalingTargetObject;
+  const SignalingTarget = (isArray(data) && SignalingArray) || SignalingObject;
 
   const targetData = new SignalingTarget(
     keypath,
     rootState,
     parentState,
-    changeDispatcher,
+    stateDispatcher,
     listenersManager,
   );
   const stateProxy = new Proxy(targetData, {

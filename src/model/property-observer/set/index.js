@@ -7,6 +7,7 @@ import {
 
 // eslint-disable-next-line import/no-cycle
 import { createObservableSignalingStateModel } from '../../../index';
+import { computeAssignmentType } from '../../state-dispatcher';
 
 /**
  * @module model
@@ -18,31 +19,32 @@ import { createObservableSignalingStateModel } from '../../../index';
 //  * @typicalname Set Property Observer
 //  * /
 
-export default function setPropertyObserver(target, key, value, proxy) {
+export default function setPropertyObserver(target, key, currentValue, proxy) {
   let success = false;
 
-  // eslint-disable-next-line no-debugger
-  debugger;
-  console.log({ set: { target, key, value, proxy } });
+  console.log({ set: { target, key, value: currentValue, proxy } });
 
-  if (isValidDataEntry(key, value)) {
+  if (isValidDataEntry(key, currentValue)) {
     const keypath = getSanitizedPath(concatKeypath(target.getKeypath(), key));
-    const changeDispatcher = target.getChangeDispatcher();
+
+    const stateDispatcher = target.getStateDispatcher();
     const listenersManager = target.getListenersManager();
 
-    changeDispatcher.setPatchLogItem(keypath, value);
+    const assignmentType = computeAssignmentType(target, key, currentValue);
 
-    value = isDataValue(value)
-      ? value
+    stateDispatcher[assignmentType](keypath, currentValue);
+
+    currentValue = isDataValue(currentValue)
+      ? currentValue
       : createObservableSignalingStateModel(
-          value,
+          currentValue,
           keypath,
           target.getRootState() || proxy,
           proxy,
-          changeDispatcher,
+          stateDispatcher,
           listenersManager,
         );
-    success = Reflect.set(target, key, value, proxy);
+    success = Reflect.set(target, key, currentValue, proxy);
   }
   return success;
 }
