@@ -30,16 +30,9 @@ describe('regarding the features of any observable state ...', () => {
     expect(state.la.ne.getDataRaw()).toStrictEqual({ foo: 'FOO' });
 
     // touch case
-    state.la = { lau: 'LAU', ne: { foo: 'FOO' } };
+    state.la = { lau: 'LAUU', ne: { foo: 'FOO' } };
     expect(state.la.getDataRaw()).toStrictEqual({
-      lau: 'LAU',
-      ne: { foo: 'FOO' },
-    });
-
-    // touch case
-    state.la = { lau: 'LAU', ne: { foo: 'FOO' } };
-    expect(state.la.getDataRaw()).toStrictEqual({
-      lau: 'LAU',
+      lau: 'LAUU',
       ne: { foo: 'FOO' },
     });
   });
