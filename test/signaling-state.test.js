@@ -2,8 +2,7 @@
 /* eslint-disable max-classes-per-file */
 
 import { describe, expect, test } from '@jest/globals';
-
-import { createSignalingState } from '../src';
+import createSignalingState from '../src';
 
 describe('regarding the features of any observable state ...', () => {
   // const target = { foo: 'FOO', bar: 'BAR' };

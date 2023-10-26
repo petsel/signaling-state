@@ -23,6 +23,11 @@ function getChildStates(target) {
   return Object.values(target).filter(value => isObject(value));
 }
 
+function isSignalingTarget(value) {
+  // eslint-disable-next-line no-use-before-define
+  return value instanceof SignalingObject || value instanceof SignalingArray;
+}
+
 function asSignalingTarget(
   keypath,
   rootState,
@@ -47,7 +52,21 @@ function asSignalingTarget(
   stateDispatcher = stateDispatcher ?? new StateDispatcher(this);
   listenersManager = listenersManager ?? new ListenersManager(this);
 
+  let branchUpdateTarget = null;
+
   Object.defineProperties(this, {
+    // eslint-disable-next-line no-underscore-dangle
+    __branchUpdateTarget: {
+      set: (target = null) => {
+        if (
+          target === null ||
+          (isSignalingTarget(target) && target.getRootState() === null)
+        ) {
+          branchUpdateTarget = target;
+        }
+      },
+      get: () => branchUpdateTarget,
+    },
     getDataRaw: { get: () => () => getDataRaw(this) },
 
     getKeypath: { get: () => () => keypath },

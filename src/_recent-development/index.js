@@ -16,7 +16,7 @@ function getRawDataOfObservableState(state) {
   return JSON.parse(JSON.stringify(state));
 } /*
 function aggregateRawData(rawData, [key, value ]) {
-  rawData[key] = isDataValue(value) ? value : recursivelyCreateRawData(value);
+  rawData[key] = isLeafValue(value) ? value : recursivelyCreateRawData(value);
   return rawData;
 }
 function recursivelyCreateRawData(state) {

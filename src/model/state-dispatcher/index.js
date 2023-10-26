@@ -1,4 +1,4 @@
-import staticDebounce from '../../timed-function/debounce';
+// import staticDebounce from '../../timed-function/debounce';
 import { isDeepDataStructureEquality } from '../../utility';
 
 /**
@@ -11,7 +11,7 @@ import { isDeepDataStructureEquality } from '../../utility';
 //  * @typicalname Change Dispatcher
 //  * /
 
-function isPutAssignment(target, key, currentValue) {
+function isPutUpdate(target, key, currentValue) {
   return (
     // entirely new key-value pair.
     !Object.hasOwn(target, key) ||
@@ -24,11 +24,11 @@ function isPutAssignment(target, key, currentValue) {
   );
 }
 
-export function computeAssignmentType(target, key, currentValue) {
+export function computeUpdateType(target, key, currentValue) {
   return (
     // - either entirely new key-value pair
     // - or replacement by an entirely different data-structure.
-    (isPutAssignment(target, key, currentValue) && 'put') ||
+    (isPutUpdate(target, key, currentValue) && 'put') ||
     // - kind of no-op or null-patch which assigns an entirely equal value.
     (isDeepDataStructureEquality(target[key], currentValue) && 'touch') ||
     // - everything else is considered to be ... patching with a different value.
@@ -36,7 +36,7 @@ export function computeAssignmentType(target, key, currentValue) {
   );
 }
 
-function handleChangeThroughBoundDispatcher() {
+function handleUpdateThroughBoundDispatcher() {
   const touchLog = structuredClone(this.touchLog);
   const putLog = structuredClone(this.putLog);
   const patchLog = structuredClone(this.patchLog);
@@ -50,13 +50,15 @@ function handleChangeThroughBoundDispatcher() {
 export default class StateDispatcher {
   constructor(targetRoot) {
     Object.assign(this, {
-      targetRoot,
-      dispatchChange: staticDebounce(
-        handleChangeThroughBoundDispatcher,
+      targetRoot /*
+      // the async use case.
+      dispatchUpdate: staticDebounce(
+        handleUpdateThroughBoundDispatcher,
         50,
         false,
         this,
-      ),
+      ) */,
+      dispatchUpdate: handleUpdateThroughBoundDispatcher.bind(this),
       touchLog: new Map(),
       putLog: new Map(),
       patchLog: new Map(),
@@ -66,22 +68,26 @@ export default class StateDispatcher {
   touch(keypath, value) {
     this.touchLog.set(keypath, value);
 
-    this.dispatchChange();
+    // // the async use case.
+    // this.dispatchUpdate();
   }
   put(keypath, value) {
     this.putLog.set(keypath, value);
 
-    this.dispatchChange();
+    // // the async use case.
+    // this.dispatchUpdate();
   }
   patch(keypath, value) {
     this.patchLog.set(keypath, value);
 
-    this.dispatchChange();
+    // // the async use case.
+    // this.dispatchUpdate();
   }
   delete(keypath, value) {
     this.deleteLog.set(keypath, value);
 
-    this.dispatchChange();
+    // // the async use case.
+    // this.dispatchUpdate();
   }
   clearLogs() {
     this.touchLog.clear();

@@ -82,50 +82,14 @@
  * described system.
  *
  */
-import { isDataObject } from './utility';
-import { SignalingObject, SignalingArray } from './model/signaling-target';
-
-// eslint-disable-next-line import/no-cycle
-import setPropertyObserver from './model/property-observer/set';
-import deletePropertyObserver from './model/property-observer/delete';
-
-const { isArray } = Array;
-
-const proxyByTarget = new WeakMap();
+import { isBranchValue } from './utility';
+import { createObservableSignalingStateModel } from './model';
 
 /**
- * @module SignalingStateModel
- * @typicalname Signaling State Model
+ * `createSignalingState`
  */
-
-export function createObservableSignalingStateModel(
-  data,
-  keypath = '',
-  rootState = null,
-  parentState = null,
-  stateDispatcher = null,
-  listenersManager = null,
-) {
-  const SignalingTarget = (isArray(data) && SignalingArray) || SignalingObject;
-
-  const targetData = new SignalingTarget(
-    keypath,
-    rootState,
-    parentState,
-    stateDispatcher,
-    listenersManager,
-  );
-  const stateProxy = new Proxy(targetData, {
-    set: setPropertyObserver,
-    deleteProperty: deletePropertyObserver,
-  });
-  proxyByTarget.set(targetData, stateProxy);
-
-  return Object.assign(stateProxy, data);
-}
-
-export function createSignalingState(data) {
+export default function create(data) {
   return (
-    (isDataObject(data) && createObservableSignalingStateModel(data)) || data
+    (isBranchValue(data) && createObservableSignalingStateModel(data)) || data
   );
 }
