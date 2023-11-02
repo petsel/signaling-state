@@ -13,7 +13,7 @@ import { isProtectedDataNodeKey } from '../../../utility';
 export default function deletePropertyObserver(target, key) {
   // let success = false;
 
-  console.log({ delete: { target, key } });
+  // console.log({ delete: { target, key } });
 
   return isProtectedDataNodeKey(key)
     ? false

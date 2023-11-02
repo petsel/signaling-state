@@ -88,7 +88,7 @@ import { createObservableSignalingStateModel } from './model';
 /**
  * `createSignalingState`
  */
-export default function create(data) {
+export default function create(data = {}) {
   return (
     (isBranchValue(data) && createObservableSignalingStateModel(data)) || data
   );

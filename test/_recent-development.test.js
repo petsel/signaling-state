@@ -3,7 +3,8 @@
 
 import { describe, expect, test } from '@jest/globals';
 
-import createDeepObservableModelState from '../src/_recent-development';
+// import createDeepObservableModelState from '../src/_recent-development';
+import createDeepObservableModelState from '../src';
 
 describe('regarding the features of any observable state ...', () => {
   const initialState = {

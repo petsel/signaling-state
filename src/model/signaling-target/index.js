@@ -1,8 +1,10 @@
 // eslint-disable-next-line max-classes-per-file
 import { isObject } from '../../utility';
 
-import StateDispatcher from '../state-dispatcher';
+import StatusDispatcher from '../status-dispatcher';
 import ListenersManager from '../listeners-manager';
+
+import withProxiedWebApiEventTarget from '../event-target/web-api-event-target';
 
 /**
  * @module model
@@ -14,75 +16,63 @@ import ListenersManager from '../listeners-manager';
 //  * @typicalname Signaling Target
 //  * /
 
+// function isSignalingTarget(value) {
+//   // eslint-disable-next-line no-use-before-define
+//   return value instanceof SignalingObject || value instanceof SignalingArray;
+// }
+
+// export function isBranchOrChild(child, branch) {
+//   let isChild = child === branch;
+//
+//   while (!isChild && child !== null) {
+//     child = child.getParent();
+//
+//     isChild = child === branch;
+//   }
+//   return isChild;
+// }
+
 function getDataRaw(target) {
   // - some values like e.g. a deeply proxied state can not
   //   be structurally cloned, but stringified and parsed.
   return JSON.parse(JSON.stringify(target));
 }
-function getChildStates(target) {
+function getChildren(target) {
   return Object.values(target).filter(value => isObject(value));
 }
 
-function isSignalingTarget(value) {
-  // eslint-disable-next-line no-use-before-define
-  return value instanceof SignalingObject || value instanceof SignalingArray;
-}
-
 function asSignalingTarget(
-  keypath,
-  rootState,
-  parentState,
-  stateDispatcher,
-  listenersManager,
+  keypath = '',
+  targetRoot = null,
+  targetParent = null,
 ) {
-  function dispatchEvent(...args) {
-    // eslint-disable-next-line no-use-before-define
-    return eventTarget.dispatchEvent(...args);
-  }
-  function addEventListener(...args) {
-    // eslint-disable-next-line no-use-before-define
-    return eventTarget.addEventListener(...args);
-  }
-  function removeEventListener(...args) {
-    // eslint-disable-next-line no-use-before-define
-    return eventTarget.removeEventListener(...args);
-  }
-  const eventTarget = new EventTarget();
+  const isRoot = targetRoot === null && targetParent === null;
 
-  stateDispatcher = stateDispatcher ?? new StateDispatcher(this);
-  listenersManager = listenersManager ?? new ListenersManager(this);
+  if (isRoot) {
+    targetRoot = this;
+  }
+  const statusDispatcher =
+    (isRoot && new StatusDispatcher()) || targetRoot.getStatusDispatcher();
 
-  let branchUpdateTarget = null;
+  const listenersManager =
+    (isRoot && new ListenersManager(this)) || targetRoot.getListenersManager();
 
   Object.defineProperties(this, {
-    // eslint-disable-next-line no-underscore-dangle
-    __branchUpdateTarget: {
-      set: (target = null) => {
-        if (
-          target === null ||
-          (isSignalingTarget(target) && target.getRootState() === null)
-        ) {
-          branchUpdateTarget = target;
-        }
-      },
-      get: () => branchUpdateTarget,
-    },
-    getDataRaw: { get: () => () => getDataRaw(this) },
+    getDataRaw: { value: () => getDataRaw(this) },
 
-    getKeypath: { get: () => () => keypath },
-    getRootState: { get: () => () => rootState },
-    getParentState: { get: () => () => parentState },
+    getKeypath: { value: () => keypath },
+    getRoot: { value: () => targetRoot },
+    getParent: { value: () => targetParent },
 
-    getChildStates: { get: () => () => getChildStates(this) },
+    getChildren: { value: () => getChildren(this) },
 
-    getStateDispatcher: { get: () => () => stateDispatcher },
-    getListenersManager: { get: () => () => listenersManager },
-
-    dispatchEvent: { get: () => dispatchEvent },
-    addEventListener: { get: () => addEventListener },
-    removeEventListener: { get: () => removeEventListener },
+    getStatusDispatcher: { value: () => statusDispatcher },
+    getListenersManager: { value: () => listenersManager },
   });
+  // mixing in ... apply the function based proxied `EventTarget` behavior.
+  withProxiedWebApiEventTarget.call(this);
 }
+
 export class SignalingObject {
   constructor(...args) {
     asSignalingTarget.apply(this, args);

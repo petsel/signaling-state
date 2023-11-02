@@ -4,8 +4,6 @@ import { SignalingObject, SignalingArray } from './signaling-target';
 import setPropertyObserver from './property-observer/set';
 import deletePropertyObserver from './property-observer/delete';
 
-const { isArray } = Array;
-
 export const proxyByTarget = new WeakMap();
 export const targetByProxy = new WeakMap();
 
@@ -17,26 +15,19 @@ export const targetByProxy = new WeakMap();
 export function createObservableSignalingStateModel(
   data,
   keypath = '',
-  rootState = null,
-  parentState = null,
-  stateDispatcher = null,
-  listenersManager = null,
+  targetRoot = null,
+  targetParent = null,
 ) {
-  const SignalingTarget = (isArray(data) && SignalingArray) || SignalingObject;
+  const SignalingTarget =
+    (Array.isArray(data) && SignalingArray) || SignalingObject;
 
-  const targetData = new SignalingTarget(
-    keypath,
-    rootState,
-    parentState,
-    stateDispatcher,
-    listenersManager,
-  );
-  const stateProxy = new Proxy(targetData, {
+  const dataTarget = new SignalingTarget(keypath, targetRoot, targetParent);
+  const stateProxy = new Proxy(dataTarget, {
     set: setPropertyObserver,
     deleteProperty: deletePropertyObserver,
   });
-  proxyByTarget.set(targetData, stateProxy);
-  targetByProxy.set(stateProxy, targetData);
+  proxyByTarget.set(dataTarget, stateProxy);
+  targetByProxy.set(stateProxy, dataTarget);
 
   return Object.assign(stateProxy, data);
 }

@@ -31,7 +31,7 @@ export function isEventTargetMethodName(key) {
   return /^(?:dispatchEvent|addEventListener|removeEventListener)$/.test(key);
 }
 export function isProtectedDataNodeProperty(key) {
-  return /^(?:__branchUpdateTarget|getDataRaw|getKeypath|getRootState|getParentState|getChildStates|getChangeDispatcher|getListenersManager)$/.test(
+  return /^(?:getDataRaw|getKeypath|getRoot|getParent|getChildren|getStatusDispatcher|getListenersManager)$/.test(
     key,
   );
 }
