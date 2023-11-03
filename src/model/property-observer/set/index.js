@@ -1,9 +1,15 @@
 import {
-  isBranchValue,
+  isObject,
   isValidDataEntry,
+  isBranchValue,
   concatKeypath,
   getSanitizedPath,
 } from '../../../utility';
+
+import {
+  computeUpdateType,
+  computeCutOffKeypathEntries,
+} from '../../update-computation';
 
 // eslint-disable-next-line import/no-cycle
 import { createObservableSignalingStateModel } from '../../index';
@@ -31,7 +37,20 @@ export default function setPropertyObserver(target, key, currentValue, proxy) {
     // - updating the logs before assigning and processing
     //   an e.g. nested data structure assures a still not
     //   mutated `currentValue`.
-    statusDispatcher.collect(keypath, target, key, currentValue);
+    const recentValue = target[key];
+    const updateType = computeUpdateType(target, key, currentValue);
+
+    if (updateType === 'patch' && isObject(recentValue)) {
+      const keypathEntries = computeCutOffKeypathEntries(
+        target,
+        key,
+        currentValue,
+      );
+      keypathEntries.forEach(([cutOffPath, lostValue]) =>
+        statusDispatcher.collect('delete', cutOffPath, lostValue),
+      );
+    }
+    statusDispatcher.collect(updateType, keypath, recentValue, currentValue);
 
     if (isBranchValue(currentValue)) {
       currentValue = createObservableSignalingStateModel(
