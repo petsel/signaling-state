@@ -34,6 +34,12 @@ describe('regarding the features of any observable state ...', () => {
       lau: 'LAUU',
       ne: { foo: 'FOO' },
     });
+
+    // patch and delete case
+    state.la = { ne: 'NEEEE' };
+    expect(state.la.getDataRaw()).toStrictEqual({
+      ne: 'NEEEE',
+    });
   });
 
   test.skip('... one can successfully delete an existing property ...', () => {
