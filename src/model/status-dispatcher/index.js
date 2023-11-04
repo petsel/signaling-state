@@ -1,3 +1,8 @@
+// import { isObject } from "../../utility";
+//
+// // eslint-disable-next-line import/no-cycle, import/named
+// import { getDataRaw } from "../signaling-target";
+
 /**
  * @module model
  * @typicalname Signaling State Model
@@ -46,11 +51,13 @@ export default class StatusDispatcher {
 
     const value =
       (updateType === 'patch' && {
+        // recent: isObject(recentValue) && getDataRaw(recentValue) || recentValue,
         recent: recentValue?.getDataRaw?.() ?? recentValue,
         current: currentValue,
       }) ||
       (updateType === 'delete'
-        ? recentValue?.getDataRaw?.() ?? recentValue
+        ? // ? isObject(recentValue) && getDataRaw(recentValue) || recentValue
+          recentValue?.getDataRaw?.() ?? recentValue
         : currentValue);
 
     log[updateType].set(keypath, value);

@@ -31,9 +31,10 @@ export function isEventTargetMethodName(key) {
   return /^(?:dispatchEvent|addEventListener|removeEventListener)$/.test(key);
 }
 export function isProtectedDataNodeProperty(key) {
-  return /^(?:getDataRaw|getKeypath|getRoot|getParent|getChildren|getStatusDispatcher|getListenersManager)$/.test(
-    key,
-  );
+  // return /^(?:getDataRaw|getKeypath|getRoot|getParent|getChildren|getStatusDispatcher|getListenersManager)$/.test(
+  //   key,
+  // );
+  return /^(?:getDataRaw|getKeypath|getRoot|getParent|getChildren)$/.test(key);
 }
 export function isProtectedDataNodeKey(key) {
   return isProtectedDataNodeProperty(key) || isEventTargetMethodName(key);

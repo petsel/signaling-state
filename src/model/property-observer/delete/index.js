@@ -1,6 +1,9 @@
 import { isObject, isProtectedDataNodeKey } from '../../../utility';
 import { computeCutOffKeypathEntries } from '../../update-computation';
 
+// eslint-disable-next-line import/no-cycle
+import { stateRegistry } from '../../index';
+
 /**
  * @module model
  * @typicalname Signaling State Model
@@ -15,8 +18,13 @@ export default function deletePropertyObserver(target, key) {
   let success = false;
 
   if (!isProtectedDataNodeKey(key)) {
+    const targetRoot = target.getRoot();
     const keypath = target.getKeypath();
-    const statusDispatcher = target.getStatusDispatcher();
+
+    const statusDispatcher = stateRegistry
+      .get(targetRoot)
+      .get('statusDispatcher');
+    // const statusDispatcher = target.getStatusDispatcher();
 
     // - updating the logs before assigning and processing
     //   an e.g. nested data structure assures a still not

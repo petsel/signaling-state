@@ -12,7 +12,10 @@ import {
 } from '../../update-computation';
 
 // eslint-disable-next-line import/no-cycle
-import { createObservableSignalingStateModel } from '../../index';
+import {
+  createObservableSignalingStateModel,
+  stateRegistry,
+} from '../../index';
 
 /**
  * @module model
@@ -28,10 +31,16 @@ export default function setPropertyObserver(target, key, currentValue, proxy) {
   let success = false;
 
   if (isValidDataEntry(key, currentValue)) {
+    const targetRoot = target.getRoot();
+
     const targetPath = target.getKeypath();
     const keypath = getSanitizedPath(concatKeypath(targetPath, key));
 
-    const statusDispatcher = target.getStatusDispatcher();
+    const statusDispatcher = stateRegistry
+      .get(targetRoot)
+      .get('statusDispatcher');
+    // const statusDispatcher = target.getStatusDispatcher();
+
     // const listenersManager = target.getListenersManager();
 
     // - updating the logs before assigning and processing

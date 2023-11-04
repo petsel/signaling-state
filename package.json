@@ -27,6 +27,7 @@
     "docs": "npm run docs:default && npm run docs:docdash",
     "qa": "npm run lint && npm run test:coverage && npm run docs",
     "build:dev": "npm run test && webpack --mode=development",
+    "prebuild": "webpack --mode=production",
     "build": "npm run qa && webpack --mode=production",
     "publish": "npm publish"
   },

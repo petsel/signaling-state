@@ -1,11 +1,9 @@
-/* eslint-disable no-console, no-debugger, yoda, spaced-comment */
-/* eslint-disable max-classes-per-file */
-
 import { describe, expect, test } from '@jest/globals';
 
 // import createDeepObservableModelState from '../src/_recent-development';
-import createDeepObservableModelState from '../src';
+import { create as createDeepObservableModelState } from '../src';
 
+/* eslint-disable spaced-comment */
 describe('regarding the features of any observable state ...', () => {
   const initialState = {
     foo: 'FOO',

@@ -6,6 +6,9 @@ import ListenersManager from '../listeners-manager';
 
 import withProxiedWebApiEventTarget from '../event-target/web-api-event-target';
 
+// eslint-disable-next-line import/no-cycle
+import { stateRegistry } from '../index';
+
 /**
  * @module model
  * @typicalname Signaling State Model
@@ -32,13 +35,22 @@ import withProxiedWebApiEventTarget from '../event-target/web-api-event-target';
 //   return isChild;
 // }
 
-function getDataRaw(target) {
+// export function getDataRaw(target) {
+//   // - some values like e.g. a deeply proxied state can not
+//   //   be structurally cloned, but stringified and parsed.
+//   return JSON.parse(JSON.stringify(target));
+// }
+// export function getChildren(target) {
+//   return Object.values(target).filter(value => isObject(value));
+// }
+
+function getDataRawOfBoundTarget() {
   // - some values like e.g. a deeply proxied state can not
   //   be structurally cloned, but stringified and parsed.
-  return JSON.parse(JSON.stringify(target));
+  return JSON.parse(JSON.stringify(this));
 }
-function getChildren(target) {
-  return Object.values(target).filter(value => isObject(value));
+function getChildrenOfBoundTarget() {
+  return Object.values(this).filter(value => isObject(value));
 }
 
 function asSignalingTarget(
@@ -50,24 +62,35 @@ function asSignalingTarget(
 
   if (isRoot) {
     targetRoot = this;
-  }
-  const statusDispatcher =
-    (isRoot && new StatusDispatcher()) || targetRoot.getStatusDispatcher();
 
-  const listenersManager =
-    (isRoot && new ListenersManager(this)) || targetRoot.getListenersManager();
+    stateRegistry.set(
+      targetRoot,
+      new Map([
+        ['statusDispatcher', new StatusDispatcher()],
+        ['listenersManager', new ListenersManager(this)],
+        ['keypathRegistry', new Map()],
+      ]),
+    );
+  }
+  // const statusDispatcher =
+  //   (isRoot && new StatusDispatcher()) || targetRoot.getStatusDispatcher();
+
+  // const listenersManager =
+  //   (isRoot && new ListenersManager(this)) || targetRoot.getListenersManager();
 
   Object.defineProperties(this, {
-    getDataRaw: { value: () => getDataRaw(this) },
+    // getDataRaw: { value: () => getDataRaw(this) },
+    getDataRaw: { value: getDataRawOfBoundTarget.bind(this) },
 
     getKeypath: { value: () => keypath },
     getRoot: { value: () => targetRoot },
     getParent: { value: () => targetParent },
 
-    getChildren: { value: () => getChildren(this) },
+    // getChildren: { value: () => getChildren(this) },
+    getChildren: { value: getChildrenOfBoundTarget.bind(this) },
 
-    getStatusDispatcher: { value: () => statusDispatcher },
-    getListenersManager: { value: () => listenersManager },
+    // getStatusDispatcher: { value: () => statusDispatcher },
+    // getListenersManager: { value: () => listenersManager },
   });
   // mixing in ... apply the function based proxied `EventTarget` behavior.
   withProxiedWebApiEventTarget.call(this);
