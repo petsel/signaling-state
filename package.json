@@ -14,6 +14,9 @@
   "homepage": "https://github.com/petsel/signaling-state/tree/main#readme",
   "author": "Peter Seliger",
   "sideEffects": false,
+  "engines" : {
+    "node" : ">=19.0.0"
+  },
   "directories": {
     "test": "test"
   },

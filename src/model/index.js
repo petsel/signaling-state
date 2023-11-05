@@ -1,15 +1,12 @@
-/* eslint-disable import/no-cycle */
 import { SignalingObject, SignalingArray } from './signaling-target';
 
-import deletePropertyObserver from './property-observer/delete';
+// eslint-disable-next-line import/no-cycle
 import setPropertyObserver from './property-observer/set';
 import getPropertyObserver from './property-observer/get';
-/* eslint-enable import/no-cycle */
+import deletePropertyObserver from './property-observer/delete';
 
-export const proxyByTarget = new WeakMap();
-export const targetByProxy = new WeakMap();
-
-export const stateRegistry = new WeakMap();
+// export const proxyByTarget = new WeakMap();
+// export const targetByProxy = new WeakMap();
 
 /**
  * @module SignalingStateModel
@@ -31,8 +28,8 @@ export function createObservableSignalingStateModel(
     set: setPropertyObserver,
     get: getPropertyObserver,
   });
-  proxyByTarget.set(dataTarget, stateProxy);
-  targetByProxy.set(stateProxy, dataTarget);
+  // proxyByTarget.set(dataTarget, stateProxy);
+  // targetByProxy.set(stateProxy, dataTarget);
 
   return Object.assign(stateProxy, data);
 }

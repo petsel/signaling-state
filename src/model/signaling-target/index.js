@@ -1,13 +1,8 @@
 // eslint-disable-next-line max-classes-per-file
 import { isObject } from '../../utility';
 
-import StatusDispatcher from '../status-dispatcher';
-import ListenersManager from '../listeners-manager';
-
+import { stateRegistry } from '../status-dispatcher';
 import withProxiedWebApiEventTarget from '../event-target/web-api-event-target';
-
-// eslint-disable-next-line import/no-cycle
-import { stateRegistry } from '../index';
 
 /**
  * @module model
@@ -63,20 +58,15 @@ function asSignalingTarget(
   if (isRoot) {
     targetRoot = this;
 
-    stateRegistry.set(
-      targetRoot,
-      new Map([
-        ['statusDispatcher', new StatusDispatcher()],
-        ['listenersManager', new ListenersManager(this)],
-        ['keypathRegistry', new Map()],
-      ]),
-    );
+    stateRegistry.register(targetRoot);
   }
-  // const statusDispatcher =
-  //   (isRoot && new StatusDispatcher()) || targetRoot.getStatusDispatcher();
+  const targetByKeypath = stateRegistry
+    .getServices(targetRoot)
+    .get('targetByKeypath');
 
-  // const listenersManager =
-  //   (isRoot && new ListenersManager(this)) || targetRoot.getListenersManager();
+  targetByKeypath.set(keypath, this);
+
+  // console.log({ stateRegistry, targetByKeypath });
 
   Object.defineProperties(this, {
     // getDataRaw: { value: () => getDataRaw(this) },
@@ -86,11 +76,8 @@ function asSignalingTarget(
     getRoot: { value: () => targetRoot },
     getParent: { value: () => targetParent },
 
-    // getChildren: { value: () => getChildren(this) },
     getChildren: { value: getChildrenOfBoundTarget.bind(this) },
-
-    // getStatusDispatcher: { value: () => statusDispatcher },
-    // getListenersManager: { value: () => listenersManager },
+    // getChildren: { value: () => getChildren(this) },
   });
   // mixing in ... apply the function based proxied `EventTarget` behavior.
   withProxiedWebApiEventTarget.call(this);

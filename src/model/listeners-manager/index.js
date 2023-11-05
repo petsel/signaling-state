@@ -8,8 +8,6 @@
 //  * @typicalname Listeners Manager
 //  * /
 
-// const touchEvt = new CustomEvent('datatouch', { bubbles: true, cancelable: true, detail: { foo: 'FOO' } });
-
 function registerListener(listeners, keypath, eventType, eventHandler) {
   if (!listeners.has(keypath)) {
     listeners.set(keypath, new Map());

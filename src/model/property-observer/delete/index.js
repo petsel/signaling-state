@@ -1,8 +1,7 @@
 import { isObject, isProtectedDataNodeKey } from '../../../utility';
-import { computeCutOffKeypathEntries } from '../../update-computation';
 
-// eslint-disable-next-line import/no-cycle
-import { stateRegistry } from '../../index';
+import { stateRegistry } from '../../status-dispatcher';
+import { computeCutOffKeypathEntries } from '../../update-computation';
 
 /**
  * @module model
@@ -22,7 +21,7 @@ export default function deletePropertyObserver(target, key) {
     const keypath = target.getKeypath();
 
     const statusDispatcher = stateRegistry
-      .get(targetRoot)
+      .getServices(targetRoot)
       .get('statusDispatcher');
     // const statusDispatcher = target.getStatusDispatcher();
 

@@ -1,21 +1,18 @@
 import {
   isObject,
   isValidDataEntry,
-  isBranchValue,
   concatKeypath,
   getSanitizedPath,
 } from '../../../utility';
 
+import { stateRegistry } from '../../status-dispatcher';
 import {
   computeUpdateType,
   computeCutOffKeypathEntries,
 } from '../../update-computation';
 
 // eslint-disable-next-line import/no-cycle
-import {
-  createObservableSignalingStateModel,
-  stateRegistry,
-} from '../../index';
+import { createObservableSignalingStateModel } from '../../index';
 
 /**
  * @module model
@@ -36,11 +33,10 @@ export default function setPropertyObserver(target, key, currentValue, proxy) {
     const targetPath = target.getKeypath();
     const keypath = getSanitizedPath(concatKeypath(targetPath, key));
 
-    const statusDispatcher = stateRegistry
-      .get(targetRoot)
-      .get('statusDispatcher');
-    // const statusDispatcher = target.getStatusDispatcher();
+    const rootServices = stateRegistry.getServices(targetRoot);
+    const statusDispatcher = rootServices.get('statusDispatcher');
 
+    // const statusDispatcher = target.getStatusDispatcher();
     // const listenersManager = target.getListenersManager();
 
     // - updating the logs before assigning and processing
@@ -61,13 +57,15 @@ export default function setPropertyObserver(target, key, currentValue, proxy) {
     }
     statusDispatcher.collect(updateType, keypath, recentValue, currentValue);
 
-    if (isBranchValue(currentValue)) {
+    if (isObject(currentValue)) {
       currentValue = createObservableSignalingStateModel(
         currentValue,
         keypath,
         target.getRoot(),
         target,
       );
+    } else {
+      rootServices.get('targetByKeypath').set(keypath, target);
     }
     success = Reflect.set(target, key, currentValue, proxy);
   }
